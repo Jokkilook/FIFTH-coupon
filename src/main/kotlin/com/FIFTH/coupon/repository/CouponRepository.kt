@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface CouponRepository :JpaRepository<Coupon, String>{
-    fun findByCouponId(id:String):Coupon?
+    fun findCouponById(id:Long):Coupon?
 
+    fun findCouponsByUserId(userId:String):Array<Coupon>?
 }
