@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class UserController(private val userService: UserService) {
+class Controller(private val userService: UserService) {
     @PostMapping("/register")
     fun register(
         @RequestParam username: String,
@@ -41,4 +41,7 @@ class UserController(private val userService: UserService) {
             ResponseEntity.notFound().build()
         }
     }
+    
+    //이 밑에 쿠폰 관련 API 구현
+    
 }
