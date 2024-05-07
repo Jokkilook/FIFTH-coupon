@@ -43,5 +43,17 @@ class Controller(private val userService: UserService) {
     }
     
     //이 밑에 쿠폰 관련 API 구현
-    
+    // 쿠폰 사용 API
+    @PostMapping("/useCoupon")
+    fun useCoupon(
+        @RequestParam userId: String,
+        @RequestParam couponCode: String
+    ): ResponseEntity<String> {
+        val result = couponService.useCoupon(userId, couponCode)
+        return if (result) {
+            ResponseEntity.ok("Coupon successfully used")
+        } else {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid coupon or already used")
+        }
+    }
 }
