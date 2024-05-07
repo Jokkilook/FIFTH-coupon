@@ -58,9 +58,11 @@ class Controller(private val userService: UserService, private val couponService
     }
 
     @GetMapping("/allCoupons")
-    fun getAllCoupons(): ResponseEntity<List<Coupon>> {
-        val allCoupons = couponService.getAllCoupons()
-        return ResponseEntity.ok(allCoupons)
+    fun getUserCouponCodes(
+        @RequestParam userId: String
+    ): ResponseEntity<Array<String>> {
+        val userCoupons = couponService.getUserCoupons(userId)
+        val userCouponCode = userCoupons?.map { it.couponCode }?.toTypedArray()
+        return ResponseEntity.ok(userCouponCode)
     }
-
 }
