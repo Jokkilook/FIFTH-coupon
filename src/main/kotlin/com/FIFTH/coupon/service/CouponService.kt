@@ -82,4 +82,23 @@ class CouponService(
     fun getUserCoupons(userId: String): Array<Coupon>? {
         return couponRepository.findCouponsByUserId(userId)
     }
+
+    // 쿠폰 유효성 체크
+    fun checkCoupon(coupon: Coupon):Boolean{
+        // redis에 유효한 세션이 있는지 체크
+        return !redisTemplate.opsForValue().get(coupon.userId+coupon.id).isNullOrEmpty()
+    }
+
+    // 쿠폰 사용
+    fun useCoupon(coupon: Coupon):Boolean{
+        // 유효성이 확인되면 쿠폰 데이터 삭제 후 true 리턴
+        if(checkCoupon(coupon)){
+            couponRepository.delete(coupon)
+            return true }
+
+        // 만료된 데이터가 남아있는 쿠폰인 경우
+        // 삭제 시도 후 false 반환
+        couponRepository.delete(coupon)
+        return false
+    }
 }
