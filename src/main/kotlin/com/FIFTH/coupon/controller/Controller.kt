@@ -56,5 +56,11 @@ class Controller(private val userService: UserService, private val couponService
         couponService.createSession(coupon,minuteTime)
         return  ResponseEntity.ok(coupon)
     }
-  
+
+    @GetMapping("/allCoupons")
+    fun getAllCoupons(): ResponseEntity<List<Coupon>> {
+        val allCoupons = couponService.getAllCoupons()
+        return ResponseEntity.ok(allCoupons)
+    }
+
 }
