@@ -41,5 +41,7 @@ class CouponService(
         redisTemplate.opsForValue().set(coupon.userId+coupon.id, sessionId, minuteTime, TimeUnit.MINUTES)
         return sessionId
     }
-
+    fun getAllCoupons(): List<Coupon> {
+        return couponRepository.findAll()
+    }
 }
