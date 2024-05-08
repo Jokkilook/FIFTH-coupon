@@ -76,17 +76,6 @@ class Controller(private val userService: UserService, private val couponService
         return ResponseEntity.ok(couponService.findCoupon(userId))
     }
 
-    //쿠폰 사용
-    @GetMapping("/useCoupon")
-    fun useCoupon(
-        @RequestParam id: Long,
-        @RequestParam userId: String,
-        @RequestParam couponCode: String
-    ):ResponseEntity<Boolean>{
-        val coupon = Coupon(id=id,userId=userId,couponCode=couponCode)
-        return ResponseEntity.ok(couponService.useCoupon(coupon))
-    }
-
     // 쿠폰 사용
     @GetMapping("/useCoupon")
     fun useCoupon(
