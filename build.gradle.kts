@@ -33,6 +33,9 @@ dependencies {
 
 	//	swagger-ui
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+
+	// data faker
+	implementation("net.datafaker:datafaker:2.2.2")
 }
 
 tasks.withType<KotlinCompile> {
