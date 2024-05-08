@@ -81,4 +81,15 @@ class Controller(private val userService: UserService, private val couponService
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid coupon or already used")
         }
     }
+
+    // 쿠폰 사용
+    @GetMapping("/useCoupon")
+    fun useCoupon(
+        @RequestParam id: Long,
+        @RequestParam userId: String,
+        @RequestParam couponCode: String
+    ):ResponseEntity<Boolean>{
+        val coupon = Coupon(id=id,userId=userId,couponCode=couponCode)
+        return ResponseEntity.ok(couponService.useCoupon(coupon))
+    }
 }

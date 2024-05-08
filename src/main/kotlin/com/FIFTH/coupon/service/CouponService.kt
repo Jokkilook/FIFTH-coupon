@@ -84,30 +84,24 @@ class CouponService(
     fun getUserCoupons(userId: String): Array<Coupon>? {
         return couponRepository.findCouponsByUserId(userId)
     }
-    
-        // 쿠폰 사용 함수
-    fun useCoupon(userId: String, couponCode: String): Boolean {
-        val coupon = couponRepository.findByUserIdAndCouponCode(userId, couponCode)
-            ?: return false // 해당하는 쿠폰이 없는 경우
 
-        val sessionId = redisTemplate.opsForValue().get(userId + coupon.id)
-        if (sessionId == null) {
-            // 세션이 만료되거나 존재하지 않는 경우
-            return false
-        } else {
-            // 이미 사용된 쿠폰인지 확인
-            if (coupon.used) {
-                return false
-            }
+    // 쿠폰 유효성 체크
+    fun checkCoupon(coupon: Coupon):Boolean{
+        // redis에 유효한 세션이 있는지 체크
+        return !redisTemplate.opsForValue().get(coupon.userId+coupon.id).isNullOrEmpty()
+    }
 
-            // 쿠폰 사용 처리 및 상태 업데이트
-            coupon.used = true
-            couponRepository.save(coupon)
+    // 쿠폰 사용
+    fun useCoupon(coupon: Coupon):Boolean{
+        // 유효성이 확인되면 쿠폰 데이터 삭제 후 true 리턴
+        if(checkCoupon(coupon)){
+            couponRepository.delete(coupon)
+            return true }
 
-            // Redis에서 세션 삭제
-            redisTemplate.delete(userId + coupon.id)
+        // 만료된 데이터가 남아있는 쿠폰인 경우
+        // 삭제 시도 후 false 반환
+        couponRepository.delete(coupon)
+        return false
 
-            return true
-        }
     }
 }
