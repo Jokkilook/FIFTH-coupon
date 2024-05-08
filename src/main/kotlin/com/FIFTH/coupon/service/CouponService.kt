@@ -90,6 +90,7 @@ class CouponService(
         val coupon = couponRepository.findByUserIdAndCouponCode(userId, couponCode)
             ?: return false // 해당하는 쿠폰이 없는 경우
 
+<<<<<<< Updated upstream
         val sessionId = redisTemplate.opsForValue().get(userId + coupon.id)
         if (sessionId == null) {
             // 세션이 만료되거나 존재하지 않는 경우
@@ -111,3 +112,31 @@ class CouponService(
         }
     }
 }
+=======
+    //쿠폰 데이터 조회
+    fun findCoupon(userId: String):Array<Coupon>?{
+        var array:Array<Coupon>? = arrayOf<Coupon>()
+        array = couponRepository.findCouponsByUserId(userId)
+        return  array
+    }
+
+    //쿠폰 유효성 체크
+    fun checkCoupon(coupon: Coupon):Boolean{
+        //레디스에 유효한 세션이 있는지 체크
+        return !redisTemplate.opsForValue().get(coupon.userId+coupon.id).isNullOrEmpty()
+    }
+
+    //쿠폰 사용
+    fun useCoupon(coupon: Coupon):Boolean{
+        //유효성이 확인되면 쿠폰 데이터 삭제 후 true 리턴
+        if(checkCoupon(coupon)){
+            couponRepository.delete(coupon)
+            return true }
+
+        //아니면 만료된 데이터가 남아있는 쿠폰일 수도 있으니까
+        // 삭제 시도 후 false 리턴
+        couponRepository.delete(coupon)
+        return false
+    }
+}
+>>>>>>> Stashed changes
