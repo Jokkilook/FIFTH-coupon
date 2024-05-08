@@ -56,32 +56,6 @@ class Controller(private val userService: UserService, private val couponService
         couponService.createSession(coupon,minuteTime)
         return  ResponseEntity.ok(coupon)
     }
-<<<<<<< Updated upstream
-    
-    //유저 쿠폰 조회
-    @GetMapping("/allCoupons")
-    fun getUserCouponCodes(
-        @RequestParam userId: String
-    ): ResponseEntity<Array<String>> {
-        val userCoupons = couponService.getUserCoupons(userId)
-        val userCouponCode = userCoupons?.map { it.couponCode }?.toTypedArray()
-        return ResponseEntity.ok(userCouponCode)
-
-    }
-    
-        // 쿠폰 사용 API
-    @PostMapping("/useCoupon")
-    fun useCoupon(
-        @RequestParam userId: String,
-        @RequestParam couponCode: String
-    ): ResponseEntity<String> {
-        val result = couponService.useCoupon(userId, couponCode)
-        return if (result) {
-            ResponseEntity.ok("Coupon successfully used")
-        } else {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid coupon or already used")
-        }
-=======
 
     //쿠폰이 유효한 지 확인
     @GetMapping("/checkCoupon")
@@ -101,7 +75,7 @@ class Controller(private val userService: UserService, private val couponService
     ):ResponseEntity<Array<Coupon>?>{
         return ResponseEntity.ok(couponService.findCoupon(userId))
     }
-    
+
     //쿠폰 사용
     @GetMapping("/useCoupon")
     fun useCoupon(
@@ -111,6 +85,5 @@ class Controller(private val userService: UserService, private val couponService
     ):ResponseEntity<Boolean>{
         val coupon = Coupon(id=id,userId=userId,couponCode=couponCode)
         return ResponseEntity.ok(couponService.useCoupon(coupon))
->>>>>>> Stashed changes
     }
 }
