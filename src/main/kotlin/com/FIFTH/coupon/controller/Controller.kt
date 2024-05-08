@@ -1,6 +1,8 @@
 package com.FIFTH.coupon.controller
 
+import com.FIFTH.coupon.dto.Coupon
 import com.FIFTH.coupon.dto.User
+import com.FIFTH.coupon.service.CouponService
 import com.FIFTH.coupon.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -9,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class Controller(private val userService: UserService) {
+class Controller(private val userService: UserService, private val couponService: CouponService) {
     @PostMapping("/register")
     fun register(
         @RequestParam username: String,
@@ -41,9 +43,32 @@ class Controller(private val userService: UserService) {
             ResponseEntity.notFound().build()
         }
     }
-    
+
     //이 밑에 쿠폰 관련 API 구현
-    // 쿠폰 사용 API
+    
+    //유효시간 입력 받아 쿠폰 만들기
+    @GetMapping("/createCoupon")
+    fun createCoupon(
+        @RequestParam userId:String,
+        @RequestParam minuteTime:Long
+    ):ResponseEntity<Coupon>{
+        val coupon = couponService.createUserCoupon(userId)
+        couponService.createSession(coupon,minuteTime)
+        return  ResponseEntity.ok(coupon)
+    }
+    
+    //유저 쿠폰 조회
+    @GetMapping("/allCoupons")
+    fun getUserCouponCodes(
+        @RequestParam userId: String
+    ): ResponseEntity<Array<String>> {
+        val userCoupons = couponService.getUserCoupons(userId)
+        val userCouponCode = userCoupons?.map { it.couponCode }?.toTypedArray()
+        return ResponseEntity.ok(userCouponCode)
+
+    }
+    
+        // 쿠폰 사용 API
     @PostMapping("/useCoupon")
     fun useCoupon(
         @RequestParam userId: String,

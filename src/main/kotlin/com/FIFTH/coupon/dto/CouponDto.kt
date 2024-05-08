@@ -8,8 +8,8 @@ import jakarta.persistence.Id
 @Entity
 data class Coupon(
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    var id:String,
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id:Long? = null,
     var userId:String,
-    var couponValue:String,
+    var couponCode:String,
 )
