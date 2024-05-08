@@ -13,6 +13,7 @@ class CouponService(
     private val redisTemplate: StringRedisTemplate
 ) {
     //여기에 API 에서 실행 될 함수 로직 구현
+
     val list = arrayOf(
         '1',
         '2',
@@ -78,7 +79,8 @@ class CouponService(
         redisTemplate.opsForValue().set(coupon.userId + coupon.id, sessionId, minuteTime, TimeUnit.MINUTES)
         return sessionId
     }
-
+    
+    //유저 쿠폰 
     fun getUserCoupons(userId: String): Array<Coupon>? {
         return couponRepository.findCouponsByUserId(userId)
     }
@@ -100,5 +102,6 @@ class CouponService(
         // 삭제 시도 후 false 반환
         couponRepository.delete(coupon)
         return false
+
     }
 }

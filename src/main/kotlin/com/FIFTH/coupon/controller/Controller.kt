@@ -56,7 +56,8 @@ class Controller(private val userService: UserService, private val couponService
         couponService.createSession(coupon,minuteTime)
         return  ResponseEntity.ok(coupon)
     }
-
+    
+    //유저 쿠폰 조회
     @GetMapping("/allCoupons")
     fun getUserCouponCodes(
         @RequestParam userId: String
@@ -64,6 +65,21 @@ class Controller(private val userService: UserService, private val couponService
         val userCoupons = couponService.getUserCoupons(userId)
         val userCouponCode = userCoupons?.map { it.couponCode }?.toTypedArray()
         return ResponseEntity.ok(userCouponCode)
+
+    }
+    
+        // 쿠폰 사용 API
+    @PostMapping("/useCoupon")
+    fun useCoupon(
+        @RequestParam userId: String,
+        @RequestParam couponCode: String
+    ): ResponseEntity<String> {
+        val result = couponService.useCoupon(userId, couponCode)
+        return if (result) {
+            ResponseEntity.ok("Coupon successfully used")
+        } else {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid coupon or already used")
+        }
     }
 
     // 쿠폰 사용
