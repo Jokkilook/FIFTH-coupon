@@ -6,21 +6,13 @@ import com.FIFTH.coupon.repository.CouponRepository
 import com.FIFTH.coupon.repository.UserRepository
 import com.FIFTH.coupon.service.CouponService
 import com.FIFTH.coupon.service.UserService
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.redis.core.StringRedisTemplate
-import org.mockito.Mockito
-import java.util.concurrent.TimeUnit
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
@@ -50,13 +42,32 @@ class CouponControllerSpec@Autowired constructor(
         couponRepo.save(coupon)
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/useCoupon")
+            post("/useCoupon")
                 .param("id", coupon.id.toString())
                 .param("userId", coupon.userId)
                 .param("couponCode",coupon.couponCode)
                 .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(user.username))
+        ).andExpect(status().isOk)
+            .andExpect(jsonPath("$.id").value(coupon.id.toString()))
+    }
+
+    //쿠폰 유효성 체크 API
+    @Test
+    @DisplayName("쿠폰유효성체크API")
+    fun `쿠폰유효성체크API`() {
+        val user = User(id = 1, username = "test", password = "test")
+        userRepo.save(user)
+        val coupon = couponService.createUserCoupon(user.username)
+        couponRepo.save(coupon)
+
+        mockMvc.perform(
+            post("/checkCoupon")
+                .param("id", coupon.id.toString())
+                .param("userId", coupon.userId)
+                .param("couponCode", coupon.couponCode)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk)
+            .andExpect(jsonPath("$.id").value(coupon.id.toString()))
     }
 
 
