@@ -27,7 +27,6 @@ class CouponSpec(
     //여기에 테스트 코드 입력
     @MockBean
     private val userRepo = userRepository
-
     @MockBean
     private val couponRepo = couponRepository
     
@@ -107,6 +106,20 @@ class CouponSpec(
     }
 
     @Test
+    fun `쿠폰사용후번호삭제`(){
+        val userId = "testUser"
+        val couponId = 1L
+        val couponCode = "WXYZ9876"
+        val coupon = Coupon(id = couponId, userId = userId, couponCode = couponCode)
+        couponRepo.save(coupon)
+
+        assertNotNull(couponRepo.findCouponById(1L))
+
+        couponService.useCoupon(coupon)
+        assertNull(couponRepo.findCouponById(1L))
+    }
+
+    
     fun `쿠폰데이터정상저장여부`(){
         //여기에 API 에서 실행 될 함수 로직 구현
         val list = arrayOf('1','2','3','4','5','6','7','8','9','0','A','B','C','D','E','F','G','H','I','J','K','L','N','M','O','P','Q','R','S','T','U','V','W','Z','Y','Z')
