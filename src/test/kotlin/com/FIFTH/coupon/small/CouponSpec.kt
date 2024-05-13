@@ -5,6 +5,7 @@ import com.FIFTH.coupon.repository.CouponRepository
 import com.FIFTH.coupon.repository.UserRepository
 import com.FIFTH.coupon.service.CouponService
 import com.FIFTH.coupon.service.UserService
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.mockito.Mockito
 import java.util.concurrent.TimeUnit
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.springframework.boot.test.mock.mockito.MockBean
 
 @SpringBootTest
@@ -104,4 +103,11 @@ class CouponSpec(
             .opsForValue().set(Mockito.eq("$userId$couponId"), Mockito.anyString(), Mockito.eq(minuteTime), Mockito.eq(TimeUnit.MINUTES))
     }
 
+    @Test
+    fun `쿠폰생성`(){
+        //given
+        val meowcoupon = couponService.createUserCoupon("meow")
+        val foundCoupon = couponService.findCoupon("meow")
+        assertNotNull(foundCoupon)
+    }
 }
