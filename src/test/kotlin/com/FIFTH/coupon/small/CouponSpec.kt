@@ -106,6 +106,13 @@ class CouponSpec(
     }
 
     @Test
+    fun `쿠폰생성`(){
+        //given
+        val meowcoupon = couponService.createUserCoupon("meow")
+        val foundCoupon = couponService.findCoupon("meow")
+        assertNotNull(foundCoupon)
+    }
+
     fun `쿠폰사용후번호삭제`(){
         val userId = "testUser"
         val couponId = 1L
