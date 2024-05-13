@@ -5,6 +5,7 @@ import com.FIFTH.coupon.repository.CouponRepository
 import com.FIFTH.coupon.repository.UserRepository
 import com.FIFTH.coupon.service.CouponService
 import com.FIFTH.coupon.service.UserService
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.mockito.Mockito
 import java.util.concurrent.TimeUnit
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.springframework.boot.test.mock.mockito.MockBean
 
 @SpringBootTest
@@ -27,6 +26,7 @@ class CouponSpec(
     //여기에 테스트 코드 입력
     @MockBean
     private val userRepo = userRepository
+    @MockBean
     private val couponRepo = couponRepository
     
     //쿠폰 발급 대상 유저 유효성 테스트
@@ -104,4 +104,18 @@ class CouponSpec(
             .opsForValue().set(Mockito.eq("$userId$couponId"), Mockito.anyString(), Mockito.eq(minuteTime), Mockito.eq(TimeUnit.MINUTES))
     }
 
+    @Test
+    fun `쿠폰사용후번호삭제`(){
+        val userId = "testUser"
+        val couponId = 1L
+        val couponCode = "WXYZ9876"
+        val coupon = Coupon(id = couponId, userId = userId, couponCode = couponCode)
+        couponRepo.save(coupon)
+
+        assertNotNull(couponRepo.findCouponById(1L))
+
+        couponService.useCoupon(coupon)
+        assertNull(couponRepo.findCouponById(1L))
+
+    }
 }
