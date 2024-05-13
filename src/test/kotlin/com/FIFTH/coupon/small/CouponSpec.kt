@@ -46,9 +46,9 @@ class CouponSpec(
 
 
     // 기한이 만료된 쿠폰 체크
-    private val couponRepository = Mockito.mock(CouponRepository::class.java)
-    private val redisTemplate = Mockito.mock(StringRedisTemplate::class.java)
-    private val couponService = CouponService(couponRepository, redisTemplate)
+    private val couponRepositorys = Mockito.mock(CouponRepository::class.java)
+    private val redisTemplates = Mockito.mock(StringRedisTemplate::class.java)
+    private val couponServices = CouponService(couponRepositorys, redisTemplates)
 
     @Test
     fun `만료된 쿠폰은 false를 반환해야 함`() {
@@ -59,10 +59,10 @@ class CouponSpec(
         val coupon = Coupon(id = couponId, userId = userId, couponCode = couponCode)
 
         // Mock Redis to return null (expired session)
-        Mockito.`when`(redisTemplate.opsForValue().get(Mockito.anyString())).thenReturn(null)
+        Mockito.`when`(redisTemplates.opsForValue().get(Mockito.anyString())).thenReturn(null)
 
         // When
-        val result = couponService.checkCoupon(coupon)
+        val result = couponServices.checkCoupon(coupon)
 
         // Then
         assertFalse(result)
@@ -78,10 +78,10 @@ class CouponSpec(
 
         // Mock Redis to return a valid session ID
         val sessionId = "validSessionId"
-        Mockito.`when`(redisTemplate.opsForValue().get(Mockito.anyString())).thenReturn(sessionId)
+        Mockito.`when`(redisTemplates.opsForValue().get(Mockito.anyString())).thenReturn(sessionId)
 
         // When
-        val result = couponService.checkCoupon(coupon)
+        val result = couponServices.checkCoupon(coupon)
 
         // Then
         assertTrue(result)
@@ -97,10 +97,10 @@ class CouponSpec(
         val minuteTime = 30L // 30 minutes
 
         // When
-        couponService.createSession(coupon, minuteTime)
+        couponServices.createSession(coupon, minuteTime)
 
         // Then
-        Mockito.verify(redisTemplate, Mockito.times(1))
+        Mockito.verify(redisTemplates, Mockito.times(1))
             .opsForValue().set(Mockito.eq("$userId$couponId"), Mockito.anyString(), Mockito.eq(minuteTime), Mockito.eq(TimeUnit.MINUTES))
     }
 
