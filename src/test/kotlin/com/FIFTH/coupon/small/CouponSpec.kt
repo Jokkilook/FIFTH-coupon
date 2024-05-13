@@ -42,7 +42,66 @@ class CouponSpec(
 
         //Then
         assertTrue(userRepo.findByUsername(user.username)!=null)
-
-
     }
+
+
+    // 기한이 만료된 쿠폰 체크
+    private val couponRepository = Mockito.mock(CouponRepository::class.java)
+    private val redisTemplate = Mockito.mock(StringRedisTemplate::class.java)
+    private val couponService = CouponService(couponRepository, redisTemplate)
+
+    @Test
+    fun `만료된 쿠폰은 false를 반환해야 함`() {
+        // Given
+        val userId = "testUser"
+        val couponId = 1L
+        val couponCode = "ABCD1234"
+        val coupon = Coupon(id = couponId, userId = userId, couponCode = couponCode)
+
+        // Mock Redis to return null (expired session)
+        Mockito.`when`(redisTemplate.opsForValue().get(Mockito.anyString())).thenReturn(null)
+
+        // When
+        val result = couponService.checkCoupon(coupon)
+
+        // Then
+        assertFalse(result)
+    }
+
+    @Test
+    fun `유효한 쿠폰은 true를 반환해야 함`() {
+        // Given
+        val userId = "testUser"
+        val couponId = 1L
+        val couponCode = "EFGH5678"
+        val coupon = Coupon(id = couponId, userId = userId, couponCode = couponCode)
+
+        // Mock Redis to return a valid session ID
+        val sessionId = "validSessionId"
+        Mockito.`when`(redisTemplate.opsForValue().get(Mockito.anyString())).thenReturn(sessionId)
+
+        // When
+        val result = couponService.checkCoupon(coupon)
+
+        // Then
+        assertTrue(result)
+    }
+
+    @Test
+    fun `createSession은 올바른 유효시간을 가진 세션을 생성해야 함`() {
+        // Given
+        val userId = "testUser"
+        val couponId = 1L
+        val couponCode = "WXYZ9876"
+        val coupon = Coupon(id = couponId, userId = userId, couponCode = couponCode)
+        val minuteTime = 30L // 30 minutes
+
+        // When
+        couponService.createSession(coupon, minuteTime)
+
+        // Then
+        Mockito.verify(redisTemplate, Mockito.times(1))
+            .opsForValue().set(Mockito.eq("$userId$couponId"), Mockito.anyString(), Mockito.eq(minuteTime), Mockito.eq(TimeUnit.MINUTES))
+    }
+
 }
