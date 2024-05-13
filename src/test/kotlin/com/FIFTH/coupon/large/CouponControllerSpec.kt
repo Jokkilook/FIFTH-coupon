@@ -40,6 +40,24 @@ class CouponControllerSpec@Autowired constructor(
     private val userRepo = userRepository
     private val couponRepo = couponRepository
 
+    //쿠폰사용API
+    @Test
+    @DisplayName("쿠폰사용API")
+    fun `쿠폰사용API`() {
+        val user = User(id = 1, username = "test", password = "test")
+        userRepo.save(user)
+        val coupon = couponService.createUserCoupon(user.username)
+        couponRepo.save(coupon)
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/useCoupon")
+                .param("id", coupon.id.toString())
+                .param("userId", coupon.userId)
+                .param("couponCode",coupon.couponCode)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(user.username))
+    }
 
 
 }
