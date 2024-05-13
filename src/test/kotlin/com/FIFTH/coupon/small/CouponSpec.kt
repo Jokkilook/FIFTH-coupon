@@ -14,6 +14,7 @@ import org.mockito.Mockito
 import java.util.concurrent.TimeUnit
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.springframework.boot.test.mock.mockito.MockBean
 
 @SpringBootTest
 class CouponSpec(
@@ -24,6 +25,25 @@ class CouponSpec(
     @Autowired val redisTemplate: StringRedisTemplate,
 ) {
     //여기에 테스트 코드 입력
+    @MockBean
+    private val userRepo = userRepository
+    private val couponRepo = couponRepository
+    
+    //쿠폰 발급 대상 유저 유효성 테스트
+    @Test
+    fun checkTargetUserValidation(){
+        //Given
+        val user = User(id = 0, username = "test", password = "test")
+        userRepo.save(user)
+
+        //When
+        couponService.createUserCoupon(user.username)
+
+
+        //Then
+        assertTrue(userRepo.findByUsername(user.username)!=null)
+    }
+
 
     // 기한이 만료된 쿠폰 체크
     private val couponRepository = Mockito.mock(CouponRepository::class.java)
