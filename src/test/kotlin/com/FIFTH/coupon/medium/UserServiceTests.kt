@@ -74,5 +74,7 @@ class UserServiceTests {
         assertNotNull(savedUser)
         assertEquals(randomUser.username, savedUser.username)
         //이 둘이 같은지 확인하는 과정
+
+        //커밋 푸쉬용 주석 1
     }
 }
