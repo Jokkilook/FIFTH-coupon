@@ -1,13 +1,19 @@
-package com.FIFTH.coupon.dto
+package com.FIFTH.coupon.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Table
 
-
-data class UserDto(
+@Entity
+@Table (name = "users")
+data class UserEntity(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
     var username: String,
+    var password: String // 실제 애플리케이션에서는 비밀번호를 해시하여 저장
 )
 /*
 CREATE TABLE `user` (

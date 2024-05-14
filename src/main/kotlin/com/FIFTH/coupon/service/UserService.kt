@@ -1,6 +1,7 @@
 package com.FIFTH.coupon.service
 
-import com.FIFTH.coupon.dto.User
+import com.FIFTH.coupon.dto.UserDto
+import com.FIFTH.coupon.entity.UserEntity
 import com.FIFTH.coupon.repository.UserRepository
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
@@ -11,9 +12,14 @@ class UserService(
     private val userRepository: UserRepository,
     private val redisTemplate: StringRedisTemplate // Redis 템플릿 추가
 ) {
-    fun registerUser(username: String, password: String): User {
-        val user = User(username = username, password = password) // 비밀번호는 암호화 처리 필요
-        return userRepository.save(user)
+    fun registerUser(username: String, password: String): UserDto {
+        userRepository.findByUsername(username)?.let {
+            throw IllegalStateException("Username already exists")
+        }
+        val user = UserEntity(username = username, password = password) // 비밀번호는 암호화 처리 필요
+        return userRepository.save(user).let {
+            UserDto(username = it.username)
+        }
     }
 
     fun validateUser(username: String, password: String): Boolean {
