@@ -1,7 +1,7 @@
 package com.FIFTH.coupon.controller
 
 import com.FIFTH.coupon.dto.Coupon
-import com.FIFTH.coupon.dto.User
+import com.FIFTH.coupon.dto.UserDto
 import com.FIFTH.coupon.service.CouponService
 import com.FIFTH.coupon.service.UserService
 import org.springframework.http.ResponseEntity
@@ -16,7 +16,7 @@ class Controller(private val userService: UserService, private val couponService
     fun register(
         @RequestParam username: String,
         @RequestParam password: String
-    ): ResponseEntity<User> {
+    ): ResponseEntity<UserDto> {
         return ResponseEntity.ok(userService.registerUser(username, password))
     }
 
@@ -32,6 +32,7 @@ class Controller(private val userService: UserService, private val couponService
             ResponseEntity.notFound().build()
         }
     }
+
     @GetMapping("/check")
     fun check(
         @RequestParam username: String,

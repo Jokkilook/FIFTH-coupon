@@ -2,7 +2,7 @@ package com.FIFTH.coupon.small
 
 
 import com.FIFTH.coupon.dto.Coupon
-import com.FIFTH.coupon.dto.User
+import com.FIFTH.coupon.dto.UserDto
 import com.FIFTH.coupon.repository.CouponRepository
 import com.FIFTH.coupon.repository.UserRepository
 import com.FIFTH.coupon.service.CouponService

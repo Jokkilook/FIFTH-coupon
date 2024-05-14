@@ -5,13 +5,9 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 
-@Entity
-data class User(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
+
+data class UserDto(
     var username: String,
-    var password: String // 실제 애플리케이션에서는 비밀번호를 해시하여 저장
 )
 /*
 CREATE TABLE `user` (
