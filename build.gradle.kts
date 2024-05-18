@@ -36,7 +36,6 @@ dependencies {
 
 	// data faker
 	implementation("net.datafaker:datafaker:2.2.2")
-
 }
 
 tasks.withType<KotlinCompile> {

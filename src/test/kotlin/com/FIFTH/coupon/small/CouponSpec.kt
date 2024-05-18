@@ -5,6 +5,7 @@ import com.FIFTH.coupon.repository.CouponRepository
 import com.FIFTH.coupon.repository.UserRepository
 import com.FIFTH.coupon.service.CouponService
 import com.FIFTH.coupon.service.UserService
+import org.apache.catalina.User
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -34,7 +35,7 @@ class CouponSpec(
     @Test
     fun checkTargetUserValidation(){
         //Given
-        val user = User(id = 0, username = "test", password = "test")
+        val user = User(id = 0, username = "test", password = "test",)
         userRepo.save(user)
 
         //When
