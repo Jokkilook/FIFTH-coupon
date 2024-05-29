@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
 	id("org.springframework.boot") version "3.2.5"
@@ -34,8 +35,6 @@ dependencies {
 	//	swagger-ui
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 
-	// data faker
-	implementation("net.datafaker:datafaker:2.2.2")
 }
 
 tasks.withType<KotlinCompile> {
@@ -48,3 +47,27 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+tasks.named<BootJar>("bootJar") {
+	archiveFileName.set("app.jar")
+}
+
+
+//// Spring Boot build info 설정
+//springBoot {
+//	buildInfo()
+//}
+//
+//
+//// 기본 JAR 작업 비활성화
+//tasks.withType<Jar> {
+//	enabled = false
+//}
+//
+////버전 출력
+//tasks.register<Exec>("printVersion") {
+//	group = "custom"
+//	description = "Prints the project version"
+//	commandLine("sh", "-c", "echo $version")
+//}
+
