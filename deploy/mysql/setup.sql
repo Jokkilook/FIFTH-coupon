@@ -22,8 +22,8 @@ USE `user`;
 -- 테이블 user.user 구조 내보내기
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
-                                      `id` BIGINT NOT NULL AUTO_INCREMENT,
-                                      `username` varchar(50) NOT NULL DEFAULT '',
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `username` varchar(50) NOT NULL DEFAULT '',
     `password` varchar(50) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- 테이블 coupon 구조 내보내기
 DROP TABLE IF EXISTS `coupon`;
 CREATE TABLE IF NOT EXISTS `coupon` (
-                                        `id` BIGINT NOT NULL NOT NULL DEFAULT '',
-                                        `userId` varchar(50) NOT NULL DEFAULT '',
+    `id` BIGINT NOT NULL NOT NULL DEFAULT '',
+    `userId` varchar(50) NOT NULL DEFAULT '',
     `couponCode` varchar(50) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
