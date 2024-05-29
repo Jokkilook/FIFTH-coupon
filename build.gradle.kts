@@ -48,3 +48,22 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+// Spring Boot build info 설정
+springBoot {
+	buildInfo()
+}
+
+
+// 기본 JAR 작업 비활성화
+tasks.withType<Jar> {
+	enabled = false
+}
+
+//버전 출력
+tasks.register<Exec>("printVersion") {
+	group = "custom"
+	description = "Prints the project version"
+	commandLine("sh", "-c", "echo $version")
+}
+
