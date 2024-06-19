@@ -8,7 +8,7 @@
 
 사용 언어 : Kotlin (Gradle)\
 IDE : IntelliJ IDEA\
-Framework : Spring\
+Framework : Spring boot\
 library : Redis
 
 유저별 쿠폰을 생성해 유효기간(세션)을 부여하고\
